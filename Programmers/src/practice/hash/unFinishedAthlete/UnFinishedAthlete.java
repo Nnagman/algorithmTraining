@@ -1,16 +1,16 @@
-package practice.hash;
+package practice.hash.unFinishedAthlete;
 
 import java.util.HashMap;
 
 public class UnFinishedAthlete {
     public static void main(String[] args) {
-        String answer = solution(new String[]{"leo", "kiki", "eden"}, new String[]{"eden", "kiki"});
-        System.out.println(answer);
+        String[] participant = new String[]{"leo", "kiki", "eden"};
+        String[] completion = new String[]{"eden", "kiki"};
+        System.out.println(solution(participant, completion));
     }
 
     public static String solution(String[] participant, String[] completion) {
-        String answer = comparison(participant, completion);
-        return answer;
+        return comparison(participant, completion);
     }
 
     public static String comparison(String[] array_1, String[] array_2) {

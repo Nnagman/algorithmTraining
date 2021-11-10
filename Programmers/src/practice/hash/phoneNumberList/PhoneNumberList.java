@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class PhoneNumberList {
     public static void main(String[] args) {
-        String[] stringArr = {""};
+        String[] stringArr = {"12", "123", "1235", "567", "88"};
         System.out.println(solution(stringArr));
     }
 

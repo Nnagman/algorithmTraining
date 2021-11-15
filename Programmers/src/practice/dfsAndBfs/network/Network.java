@@ -15,7 +15,6 @@ public class Network {
         int answer = 0;
         boolean[] visited = new boolean[n];
         for (int i = 0; i < n; i++) {
-            System.out.println("start network number: " + i);
             if (!visited[i]) {
                 answer += dfs(i, computers, visited);
             }

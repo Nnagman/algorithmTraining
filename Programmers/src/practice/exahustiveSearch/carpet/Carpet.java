@@ -27,9 +27,9 @@ public class Carpet {
         return answer;
     }
 
-    static int[] solution2(int brown, int red) {
+    static int[] solution2(int brown, int yellow) {
         int a = (brown + 4) / 2;
-        int b = brown + red;
+        int b = brown + yellow;
         double sqrt = Math.sqrt(a * a - 4 * b);
         return new int[]{(int) (a + sqrt) / 2, (int) (a - sqrt) / 2};
     }

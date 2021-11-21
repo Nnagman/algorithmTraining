@@ -1,41 +1,68 @@
 package practice.dfsAndBfs.taravelRoute;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.Objects;
 
 public class TravelRoute {
-    public static void main(String[] args) {
-        String[][] tickets = {{"ICN", "JFK"}, {"HND", "IAD"}, {"JFK", "HND"}};
-        System.out.println(Arrays.toString(getRoute(tickets, new String[tickets.length + 1], new int[tickets.length + 1], 0)));
-    }
+    public static void main(String[] args) throws UnsupportedEncodingException {
+        String[][] tickets = {{"ICN", "SFO"}, {"ICN", "ATL"}, {"SFO", "ATL"}, {"ATL", "ICN"}, {"ATL", "SFO"}};
 
-    /**
-     * To find Most Efficient Travel Route for User.
-     * To solve this problem. I will Use Recursive Function.
-     *
-     * @param tickets Tickets What User got
-     * @param route   Route What User will get
-     * @param n       Index of Tickets
-     * @return Travel Route for User ( String[] )
-     */
-    public static String[] getRoute(String[][] tickets, String[] route, int[] visited, int n) {
-        if (tickets.length == n) {
-            return route;
-        }
+        String[] route = new String[tickets.length + 1];
+        int[] visited = new int[tickets.length];
+
+        String start = "";
+        int startIdx = 0;
 
         for (int i = 0; i < tickets.length; i++) {
-            if (n == 0 && "ICN".equals(tickets[n][0])) {
-                route[n] = tickets[i][0];
-
-            } else if (n > 0) {
-                int finalI = i;
-                if (Arrays.stream(visited).anyMatch(item -> item == finalI)) continue;
-                if (route[n - 1].equals(tickets[n][0])) {
-                    route[n] = tickets[i][1];
+            if ("ICN".equals(tickets[i][0])) {
+                if (checkAlphabet(start, tickets[i][1])) {
+                    start = tickets[i][1];
+                    startIdx = i;
                 }
             }
         }
 
-        return getRoute(tickets, route, visited, n + 1);
+        route[0] = tickets[startIdx][0];
+        route[1] = tickets[startIdx][1];
+        visited[startIdx] = 1;
+
+        System.out.println(Arrays.toString(getRoute(tickets, route, visited, 2, startIdx)));
+    }
+
+    public static String[] getRoute(String[][] tickets, String[] route, int[] visited, int n, int startIdx) {
+        System.out.println(Arrays.toString(route) + " " + Arrays.toString(visited) + " " + n + " " + startIdx + " " + Arrays.toString(tickets[startIdx]));
+        if (n == tickets.length + 1) return route;
+
+        String start = tickets[startIdx][1];
+        String destination = "";
+
+        for (int i = 0; i < tickets.length; i++) {
+            if (start.equals(tickets[i][0]) && visited[i] != 1) {
+                if (checkAlphabet(destination, tickets[i][1])) {
+                    startIdx = i;
+                    destination = tickets[i][1];
+                }
+            }
+        }
+
+        route[n] = tickets[startIdx][1];
+        visited[startIdx] = 1;
+
+        return getRoute(tickets, route, visited, n + 1, startIdx);
+    }
+
+    public static boolean checkAlphabet(String s1, String s2) {
+        if ("".equals(s1)) return true;
+
+        byte[] bytes1 = s1.getBytes(StandardCharsets.US_ASCII);
+        byte[] bytes2 = s2.getBytes(StandardCharsets.US_ASCII);
+
+        for (int i = 0; i < bytes1.length; i++) {
+            if (bytes1[i] < bytes2[i]) return false;
+            else if (bytes1[i] > bytes2[i]) return true;
+        }
+
+        return false;
     }
 }

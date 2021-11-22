@@ -1,68 +1,46 @@
 package practice.dfsAndBfs.taravelRoute;
 
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.ArrayList;
 
+// 풀이출처 : https://tosuccess.tistory.com/36
 public class TravelRoute {
-    public static void main(String[] args) throws UnsupportedEncodingException {
-        String[][] tickets = {{"ICN", "SFO"}, {"ICN", "ATL"}, {"SFO", "ATL"}, {"ATL", "ICN"}, {"ATL", "SFO"}};
+    //방문한지 안한지를 체크하는 배열
+    static boolean[] visited;
+    static ArrayList<String> answers;
 
-        String[] route = new String[tickets.length + 1];
-        int[] visited = new int[tickets.length];
+    public static void main(String[] args) {
+        String[][] tickets = {{"ICN", "BOO"}, {"ICN", "COO"}, {"COO", "DOO"}, {"DOO", "COO"}, {"BOO", "DOO"}, {"DOO", "BOO"}, {"BOO", "ICN"}, {"COO", "BOO"}};
+        // String[][] tickets = {{"ICN", "SFO"}, {"SFO", "ICN"}, {"ICN", "SFO"}, {"SFO", "QRE"}};
+        //String[][] tickets = {{"ICN", "COO"}, {"ICN", "BOO"}, {"COO", "ICN"}, {"BOO", "DOO"}};
 
-        String start = "";
-        int startIdx = 0;
-
-        for (int i = 0; i < tickets.length; i++) {
-            if ("ICN".equals(tickets[i][0])) {
-                if (checkAlphabet(start, tickets[i][1])) {
-                    start = tickets[i][1];
-                    startIdx = i;
-                }
-            }
-        }
-
-        route[0] = tickets[startIdx][0];
-        route[1] = tickets[startIdx][1];
-        visited[startIdx] = 1;
-
-        System.out.println(Arrays.toString(getRoute(tickets, route, visited, 2, startIdx)));
+        System.out.println(Arrays.toString(solution(tickets)));
     }
 
-    public static String[] getRoute(String[][] tickets, String[] route, int[] visited, int n, int startIdx) {
-        System.out.println(Arrays.toString(route) + " " + Arrays.toString(visited) + " " + n + " " + startIdx + " " + Arrays.toString(tickets[startIdx]));
-        if (n == tickets.length + 1) return route;
-
-        String start = tickets[startIdx][1];
-        String destination = "";
-
-        for (int i = 0; i < tickets.length; i++) {
-            if (start.equals(tickets[i][0]) && visited[i] != 1) {
-                if (checkAlphabet(destination, tickets[i][1])) {
-                    startIdx = i;
-                    destination = tickets[i][1];
-                }
-            }
-        }
-
-        route[n] = tickets[startIdx][1];
-        visited[startIdx] = 1;
-
-        return getRoute(tickets, route, visited, n + 1, startIdx);
+    public static String[] solution(String[][] tickets) {
+        visited = new boolean[tickets.length];
+        answers = new ArrayList<>();
+        // 몇개의 공항을 들렸는지 알려주는 변수
+        int count = 0;
+        dfs(count, "ICN", "ICN", tickets);
+        // 답들 중 가장 알파벳순이 빠른 배열들로 정렬
+        Collections.sort(answers);
+        // 가장 빠른 배열을 뽑아서 String형 배열로 만듬
+        return answers.get(0).split(" ");
     }
 
-    public static boolean checkAlphabet(String s1, String s2) {
-        if ("".equals(s1)) return true;
-
-        byte[] bytes1 = s1.getBytes(StandardCharsets.US_ASCII);
-        byte[] bytes2 = s2.getBytes(StandardCharsets.US_ASCII);
-
-        for (int i = 0; i < bytes1.length; i++) {
-            if (bytes1[i] < bytes2[i]) return false;
-            else if (bytes1[i] > bytes2[i]) return true;
+    public static void dfs(int count, String present, String answer, String[][] tickets) {
+        if (count == tickets.length) {
+            answers.add(answer);
+            return;
         }
-
-        return false;
+        for (int i = 0; i < tickets.length; i++) {
+            if (!visited[i] && tickets[i][0].equals(present)) {
+                visited[i] = true;
+                dfs(count + 1, tickets[i][1], answer + " " + tickets[i][1], tickets);
+                visited[i] = false;
+            }
+        }
     }
 }

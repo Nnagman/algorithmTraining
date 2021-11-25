@@ -2,43 +2,28 @@ package practice.sorting.theBiggestNumber;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TheBiggestNumber {
     public static void main(String[] args) {
-
+        int[] numbers = {23, 232, 21, 212};
+        System.out.println(solution(numbers));
     }
 
     public static String solution(int[] numbers) {
-        List<Integer> list = Arrays.stream(numbers).boxed().toList();
-        return getAnswer(list, "");
-    }
+        List<Integer> list = Arrays.stream(numbers).boxed().sorted(
+                (o1, o2) -> {
+                    String t1 = o1.toString();
+                    String t2 = o2.toString();
+                    return (t2 + t1).compareTo(t1 + t2);
+                }).collect(Collectors.toList());
 
-    public static String getAnswer(List<Integer> numbers, String answer) {
-        if (numbers.size() == 0) return answer;
+        String answer = "";
 
-        int temp = 0;
+        for (Integer num : list) answer = answer.concat(Integer.toString(num));
 
-        for (int number : numbers) {
-            temp = getBiggerNumber(temp, number, 0);
-        }
+        if (answer.charAt(0) == '0') answer = "0";
 
-        numbers.remove(temp);
-
-        return getAnswer(numbers, answer + temp);
-    }
-
-    public static int getBiggerNumber(int target1, int target2, int n) {
-        if (target1 == 0 || target1 == target2) return target2;
-        if (target2 == 0) return target1;
-
-        if (n == Integer.toString(target1).length()) return target1;
-
-        int temp1 = Integer.parseInt(Integer.toString(target1).substring(n, n + 1));
-        int temp2 = Integer.parseInt(Integer.toString(target2).substring(n, n + 1));
-
-        if (temp1 > temp2) return target1;
-        else if (temp1 < temp2) return target2;
-
-        return getBiggerNumber(target1, target2, n + 1);
+        return answer;
     }
 }

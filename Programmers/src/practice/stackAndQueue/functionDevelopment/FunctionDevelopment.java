@@ -33,6 +33,6 @@ public class FunctionDevelopment {
             System.out.println(number + " " + progressList + " " + answer);
         }
 
-        return answer.stream().mapToInt(i -> i).toArray();
+        return answer.stream().mapToInt(Integer::intValue).toArray();
     }
 }

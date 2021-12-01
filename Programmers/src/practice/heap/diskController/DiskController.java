@@ -1,6 +1,6 @@
 package practice.heap.diskController;
 
-import java.util.PriorityQueue;
+import java.util.*;
 
 public class DiskController {
     public static void main(String[] args) {
@@ -11,16 +11,44 @@ public class DiskController {
     public static int solution(int[][] jobs) {
         int answer = 0;
 
-        PriorityQueue<Integer> pq = new PriorityQueue<>();
+        List<Integer> list = new ArrayList<>();
+        HashMap<Integer, PriorityQueue<Integer>> hm = new HashMap<>();
 
         for (int[] job : jobs) {
-            pq.add(job[0] + job[0] + job[1]);
+            PriorityQueue<Integer> temp = hm.getOrDefault(job[0], new PriorityQueue<>());
+            temp.offer(job[1]);
+            hm.put(job[0], temp);
         }
 
-        while (!pq.isEmpty()) {
+        for (int key : hm.keySet())
+            list.add(key);
 
-            answer = answer + (answer + pq.poll());
-            System.out.println(answer);
+        Collections.sort(list);
+        int t = list.get(0);
+        int w = hm.get(t).poll();
+        answer += t + w;
+
+        while (!list.isEmpty()) {
+            int tt = 1000;
+            int tw = 1000;
+            for (int i : list) {
+                if (hm.get(i).isEmpty()) {
+                    list.remove(i);
+                    hm.get(i).remove();
+                } else {
+                    if (tt + tw > i + hm.get(i).poll()) {
+                        t = i;
+                        w = hm.get(t).peek();
+                    }
+                }
+            }
+
+            hm.get(tt).poll();
+
+            answer += tt + answer - tw;
+
+            t = tt;
+            w = tw;
         }
 
         return (answer - 1) / jobs.length;

@@ -1,38 +1,47 @@
 package practice.greedy.makingBigNum;
 
-import java.util.HashMap;
-import java.util.PriorityQueue;
-import java.util.Collections;
+import java.util.Stack;
 
 public class MakingBigNum {
     public static void main(String[] args) {
-        String number = "";
-        int k = 4;
+        String number = "654321";
+        int k = 3;
         System.out.println(solution(number, k));
     }
 
     public static String solution(String number, int k) {
-        HashMap<Integer, PriorityQueue<String>> hm = new HashMap<>();
+        int idx = 0;
+        char max;
+        StringBuilder answer = new StringBuilder();
 
-        for (int i = 0; i < number.length() - 1; i++) {
-            int n = Integer.parseInt(number.substring(i, i + 1));
-            int key = (number.length() - i) + (10 - n);
-            PriorityQueue<String> queue = hm.getOrDefault(key, new PriorityQueue<>());
-            queue.add(Integer.toString(n));
-            hm.put(key, queue);
+        if (number.charAt(0) == '0') return "0";
+        for (int i = 0; i < number.length() - k; i++) {
+            max = '0';
+            for (int j = idx; j <= k + i; j++) {
+                if (max < number.charAt(j)) {
+                    max = number.charAt(j);
+                    idx = j + 1;
+                }
+            }
+            answer.append(max);
         }
+        return answer.toString();
+    }
 
-        while (k > 0) {
-            int key = Collections.max(hm.keySet());
-            String s = hm.get(key).poll();
+    public static String solution2(String number, int k) {
+        char[] result = new char[number.length() - k];
+        Stack<Character> stack = new Stack<>();
 
-            number = "";
-
-            if (hm.get(key).isEmpty())
-                hm.remove(key);
-
+        for (int i = 0; i < number.length(); i++) {
+            char c = number.charAt(i);
+            while (!stack.isEmpty() && stack.peek() < c && k-- > 0) {
+                stack.pop();
+            }
+            stack.push(c);
         }
-
-        return number;
+        for (int i = 0; i < result.length; i++) {
+            result[i] = stack.get(i);
+        }
+        return new String(result);
     }
 }

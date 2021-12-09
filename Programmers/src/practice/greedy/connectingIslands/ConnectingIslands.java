@@ -3,6 +3,15 @@ package practice.greedy.connectingIslands;
 import java.util.Arrays;
 import java.util.Comparator;
 
+/**
+ * 최소신장트리(MST, Minimum Spanning Tree)를 찾는 문제
+ * 사용해볼만 한 알고리즘은 Kruskal, Prim 이다.
+ * 만약 트리가 1자 형태라면 Prim을 그렇지 않다면 Kruskal을 사용하는게 효과적
+ * Kruskal의 시간 복잡도는 O(elog₂e) Prim의 시간 복잡도는 O(n^2)
+ * 여기서 사용하는 방법은 Kruskal 알고리즘.
+ * 하지만 최소 값을 가진 node를 차례로 연결하기 때문에 서로 연결될 경우 부모 node를 찾아야함.
+ * 그럴땐, Union-find 알고리즘을 사용하여 해결함.
+ */
 public class ConnectingIslands {
     public static void main(String[] args) {
         int n = 4;
@@ -12,48 +21,34 @@ public class ConnectingIslands {
 
     public static int solution(int n, int[][] costs) {
         int answer = 0;
-        int len = costs.length;
-        int child, parent;
-        int[] arr = new int[n];
 
         Arrays.sort(costs, Comparator.comparingInt(a -> a[2]));
 
+        int[] parent = new int[n];
+
         for (int i = 0; i < n; i++) {
-            arr[i] = i;
+            parent[i] = i;
         }
 
-        answer += costs[0][2];
-        if (costs[0][0] > costs[0][1]) {
-            arr[costs[0][0]] = costs[0][1];
-            arr[costs[0][1]] = costs[0][1];
-        } else {
-            arr[costs[0][1]] = costs[0][0];
-            arr[costs[0][0]] = costs[0][0];
-        }
+        for (int[] node : costs) {
+            int from = node[0];
+            int to = node[1];
+            int cost = node[2];
 
-        for (int i = 1; i < len - 1; i++) {
-            if (costs[i][0] > costs[i][1]) {
-                parent = costs[i][1];
-                child = costs[i][0];
-            } else {
-                parent = costs[i][0];
-                child = costs[i][1];
-            }
+            int fromParent = findParent(from, parent);
+            int toParent = findParent(to, parent);
 
-            // check has same root
-            while (true) {
-                if (child == arr[child]) {
-                    break;
-                }
-                child = arr[child];
-            }
+            if (fromParent == toParent) continue;
 
-            if (child != parent) {
-                arr[costs[i][1]] = parent;
-                answer += costs[i][2];
-            }
+            answer += cost;
+            parent[toParent] = fromParent;
         }
 
         return answer;
+    }
+
+    public static int findParent(int idx, int[] parent) {
+        if (parent[idx] == idx) return idx;
+        return parent[idx] = findParent(parent[idx], parent);
     }
 }

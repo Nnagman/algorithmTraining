@@ -1,23 +1,4 @@
-import java.util.LinkedList;
-import java.util.Queue;
-
-public class Solution {
-    public static int answer = Integer.MAX_VALUE;
-
-    public static void main(String[] args) {
-        System.out.println(solution(26));
-    }
-
-    public static int solution(int n) {
-        int[] d = new int[27];
-
-        dynamicProgrammingTopDown(n, d, 0);
-
-        System.out.println(dynamicProgrammingBottomUp(26));
-
-        return answer;
-    }
-
+```
     public static void dynamicProgrammingTopDown(int n, int[] d, int count) {
         if (d[n] < count && d[n] != 0) return;
         else d[n] = count;
@@ -48,4 +29,4 @@ public class Solution {
 
         return d[n];
     }
-}
+```

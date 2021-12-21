@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.PriorityQueue;
 
@@ -5,36 +6,33 @@ public class Solution {
     public static int answer = 0;
 
     public static void main(String[] args) {
-        System.out.println(solution(new int[]{2, 3, 5}, 15));
+        System.out.println(solution(5, 7, new int[][]{{1, 2}, {1, 3}, {1, 4}, {2, 4}, {3, 4}, {3, 5}, {4, 5}}, 4, 5));
     }
 
-    public static int solution(int[] n, int m) {
-        int[] d = new int[10001];
-        int len = d.length;
+    public static int solution(int n, int m, int[][] list, int x, int k) {
+        int answer = 0;
 
-        for (int i = 0; i < len + 1; i++) {
-            for (int x : n) {
-                if (d[i + x] == 0)
-                    d[i + x] = d[i] + 1;
-            }
-            if (d[m] > 0) break;
+        int[][] graph = floydWarshall(n, m, list);
+
+        System.out.println(Arrays.deepToString(graph));
+
+        return answer;
+    }
+
+    public static int[][] floydWarshall(int n, int m, int[][] list) {
+        int graph[][] = new int[n][n];
+
+        for (int a = 0; a < m; a++) {
+            graph[list[a][0]-1][list[a][1]-1] = 1;
+            graph[list[a][1]-1][list[a][0]-1] = 1;
         }
-
-        return d[m] > 0 ? d[m] : -1;
-    }
-
-    public static void floydWarshall(int n, int[][] arr) {
-        int[][] graph = new int[n][n];
 
         for (int a = 0; a < n; a++) {
             for (int b = 0; b < n; b++) {
-                if (a == b) graph[a][b] = 0;
-                else graph[a][b] = Integer.MAX_VALUE;
+                if (a != b && graph[a][b] == 0) {
+                    graph[a][b] = Integer.MAX_VALUE;
+                }
             }
-        }
-
-        for (int[] i : arr) {
-            graph[i[0]][i[1]] = i[2];
         }
 
         for (int k = 0; k < n; k++) {
@@ -44,5 +42,7 @@ public class Solution {
                 }
             }
         }
+
+        return graph;
     }
 }

@@ -1,48 +1,76 @@
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.PriorityQueue;
+import java.util.*;
 
 public class Solution {
     public static int answer = 0;
 
     public static void main(String[] args) {
-        System.out.println(solution(5, 7, new int[][]{{1, 2}, {1, 3}, {1, 4}, {2, 4}, {3, 4}, {3, 5}, {4, 5}}, 4, 5));
+        System.out.println(solution(new int[][]{{3, 2, 1}, {1, 2, 4}, {1, 3, 2}}));
     }
 
-    public static int solution(int n, int m, int[][] list, int x, int k) {
+    public static int solution(int[][] list) {
         int answer = 0;
 
-        int[][] graph = floydWarshall(n, m, list);
+        int n = list[0][0];
+        int m = list[0][1];
+        int c = list[0][2];
 
-        System.out.println(Arrays.deepToString(graph));
+        int[] distance = new int[n + 1];
+
+        List<List<int[]>> graph = new ArrayList<>();
+
+        for (int i = 0; i < n + 1; i++) {
+            graph.add(new ArrayList<>());
+            distance[i] = Integer.MAX_VALUE;
+        }
+
+        for (int i = 1; i < m + 1; i++) {
+            graph.get(list[i][0]).add(new int[]{list[i][1], list[i][2]});
+        }
+
+        dijkstra(distance, graph, c);
+
+        int[] result = new int[2];
+
+        for (int i = 1; i < distance.length; i++) {
+            if (distance[i] != Integer.MAX_VALUE && distance[i] != 0
+            ) {
+                result[0] += 1;
+                result[1] = Math.max(result[1], distance[i]);
+            }
+        }
+
+        System.out.println(Arrays.toString(result));
 
         return answer;
     }
 
-    public static int[][] floydWarshall(int n, int m, int[][] list) {
-        int graph[][] = new int[n][n];
+    public static int[] dijkstra(int[] distance, List<List<int[]>> graph, int start) {
+        int cost;
 
-        for (int a = 0; a < m; a++) {
-            graph[list[a][0]-1][list[a][1]-1] = 1;
-            graph[list[a][1]-1][list[a][0]-1] = 1;
-        }
+        PriorityQueue<int[]> heapQueue = new PriorityQueue<>(Comparator.comparing((o1) -> o1[1]));
 
-        for (int a = 0; a < n; a++) {
-            for (int b = 0; b < n; b++) {
-                if (a != b && graph[a][b] == 0) {
-                    graph[a][b] = Integer.MAX_VALUE;
+        heapQueue.add(new int[]{0, start});
+        distance[start] = 0;
+
+        while (!heapQueue.isEmpty()) {
+            int[] node = heapQueue.poll();
+            int now = node[1];
+            int dist = node[0];
+
+            if (distance[now] < dist) continue;
+
+            for (int[] i : graph.get(now)) {
+                cost = i[1] + dist;
+
+                if (cost < distance[i[0]]) {
+                    distance[i[0]] = cost;
+                    heapQueue.add(new int[]{cost, i[0]});
                 }
             }
         }
 
-        for (int k = 0; k < n; k++) {
-            for (int a = 0; a < n; a++) {
-                for (int b = 0; b < n; b++) {
-                    graph[a][b] = Math.min(graph[a][b], graph[a][k] + graph[k][b]);
-                }
-            }
-        }
+        System.out.println(Arrays.toString(distance));
 
-        return graph;
+        return distance;
     }
 }

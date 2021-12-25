@@ -1,12 +1,9 @@
-import java.util.*;
+1. Topology Sort(위상정렬)는 방향 그래프의 모든 노드를 방향성에 거스르지 않도록 순서대로 나열하는 것이다.
+2. 특정한 노드로 들어오는 간선의 개수를 Indegree(진입차수)라 부르는데, 첫번째 순서도 이 진입차수가 0인 노드부터 나열해야 한다.
+3. 진입차수가 0인 노드를 큐에 담고 꺼낸 뒤 해당 노드에서 출발하는 간선을 삭제한다.
+4. 위 과정을 반복하면서 더 이상 큐에 담을 노드가 없을 때 까지 반복한다.
 
-public class Solution {
-    public static int answer = 0;
-
-    public static void main(String[] args) {
-        System.out.println(solution(new int[][]{{1, 2}, {1, 5}, {2, 3}, {2, 6}, {3, 4}, {4, 7}, {5, 6}, {6, 4}}, 7));
-    }
-
+```
     public static List<Integer> solution(int[][] list, int v) {
         int[] indegree = new int[v + 1];
         List<List<Integer>> graph = new ArrayList<>();
@@ -46,4 +43,4 @@ public class Solution {
 
         return result;
     }
-}
+```

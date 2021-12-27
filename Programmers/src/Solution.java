@@ -4,27 +4,31 @@ public class Solution {
     public static int answer = 0;
 
     public static void main(String[] args) {
-        System.out.println(solution(new int[][]{{1, 2}, {1, 5}, {2, 3}, {2, 6}, {3, 4}, {4, 7}, {5, 6}, {6, 4}}, 7));
+        solution(new int[][]{{10, -1}, {10, 1, -1}, {4, 1, -1}, {4, 3, 1, -1}, {3, 3, -1}}, 5);
     }
 
-    public static List<Integer> solution(int[][] list, int v) {
+    public static void solution(int[][] list, int v) {
         int[] indegree = new int[v + 1];
+        int[] time = new int[v + 1];
         List<List<Integer>> graph = new ArrayList<>();
 
         for (int i = 0; i < v + 1; i++) {
             graph.add(new ArrayList<>());
         }
 
-        for (int[] ints : list) {
-            indegree[ints[1]] += 1;
-            graph.get(ints[0]).add(ints[1]);
+        for (int i = 0; i < v; i++) {
+            indegree[i + 1] = list[i].length - 2;
+            time[i + 1] = list[i][0];
+            for (int j = 1; j < list[i].length - 1; j++) {
+                graph.get(i + 1).add(list[i][j]);
+            }
         }
 
-        return topologySort(indegree, graph);
+        System.out.println(Arrays.toString(topologySort(indegree, time, graph)));
     }
 
-    public static List<Integer> topologySort(int[] indegree, List<List<Integer>> graph) {
-        List<Integer> result = new ArrayList<>();
+    public static int[] topologySort(int[] indegree, int[] time, List<List<Integer>> graph) {
+        int[] result = Arrays.copyOf(time, time.length);
         Queue<Integer> queue = new LinkedList<>();
         int len = indegree.length;
         int now;
@@ -37,8 +41,9 @@ public class Solution {
 
         while (!queue.isEmpty()) {
             now = queue.poll();
-            result.add(now);
             for (int i : graph.get(now)) {
+                System.out.println(now);
+                result[i] = Math.max(result[i], result[now] + time[i]);
                 indegree[i] -= 1;
                 if (indegree[i] == 0) queue.add(i);
             }

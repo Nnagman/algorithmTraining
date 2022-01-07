@@ -1,54 +1,59 @@
 import java.util.*;
 
+class Food implements Comparable<Food> {
+    int time;
+    int idx;
+
+    public Food(int time, int idx) {
+        this.time = time;
+        this.idx = idx;
+    }
+
+    @Override
+    public int compareTo(Food o) {
+        return Integer.compare(this.time, o.time);
+    }
+}
+
 public class Solution {
-    public static int answer = 0;
-
     public static void main(String[] args) {
-        solution(new int[][]{{10, -1}, {10, 1, -1}, {4, 1, -1}, {4, 3, 1, -1}, {3, 3, -1}}, 5);
+        solution(5, new int[]{3, 1, 2});
     }
 
-    public static void solution(int[][] list, int v) {
-        int[] indegree = new int[v + 1];
-        int[] time = new int[v + 1];
-        List<List<Integer>> graph = new ArrayList<>();
+    public static int solution(long k, int[] food_times) {
+        long len = food_times.length;
+        long food_sum = 0;
 
-        for (int i = 0; i < v + 1; i++) {
-            graph.add(new ArrayList<>());
+        for (int i = 0; i < len; i++) {
+            food_sum += food_times[i];
         }
 
-        for (int i = 0; i < v; i++) {
-            indegree[i + 1] = list[i].length - 2;
-            time[i + 1] = list[i][0];
-            for (int j = 1; j < list[i].length - 1; j++) {
-                graph.get(i + 1).add(list[i][j]);
-            }
+        if (food_sum <= k) return -1;
+
+        PriorityQueue<Food> pq = new PriorityQueue<>();
+
+        for (int i = 0; i < len; i++) {
+            pq.offer(new Food(food_times[i], i + 1));
         }
 
-        System.out.println(Arrays.toString(topologySort(indegree, time, graph)));
-    }
+        long sum_values = 0;
+        long previous = 0;
+        long now;
 
-    public static int[] topologySort(int[] indegree, int[] time, List<List<Integer>> graph) {
-        int[] result = Arrays.copyOf(time, time.length);
-        Queue<Integer> queue = new LinkedList<>();
-        int len = indegree.length;
-        int now;
-
-        for (int i = 1; i < len; i++) {
-            if (indegree[i] == 0) {
-                queue.add(i);
-            }
+        while (sum_values + ((pq.peek().time - previous) * len) <= k) {
+            now = pq.poll().time;
+            sum_values += (now - previous) * len;
+            len -= 1;
+            previous = now;
         }
 
-        while (!queue.isEmpty()) {
-            now = queue.poll();
-            for (int i : graph.get(now)) {
-                System.out.println(now);
-                result[i] = Math.max(result[i], result[now] + time[i]);
-                indegree[i] -= 1;
-                if (indegree[i] == 0) queue.add(i);
-            }
+        List<Food> result = new ArrayList<>();
+        while (!pq.isEmpty()) {
+            result.add(pq.poll());
         }
 
-        return result;
+        result.sort(Comparator.comparingInt(o -> o.idx));
+
+        return result.get((int) ((k - sum_values) % len)).idx;
     }
 }

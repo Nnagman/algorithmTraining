@@ -1,13 +1,13 @@
 package thisIsCodingTest.part3.implementationProblem.stringCompression;
 
 public class StringCompression {
-    public static int Solution(String s) {
+    public static int solution(String s) {
         int answer = s.length();
         int step_len = s.length() / 2 + 1;
         int len = s.length();
         int count;
 
-        StringBuilder compressed;
+        StringBuilder compressed = new StringBuilder();
         String prev;
 
         for (int i = 1; i < step_len; i++) {
@@ -28,5 +28,9 @@ public class StringCompression {
         }
 
         return answer;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(solution("ababcdcdababcdcd"));
     }
 }

@@ -1,7 +1,5 @@
 package thisIsCodingTest.part3.implementationProblem.lockAndKey;
 
-import java.util.Arrays;
-
 public class LockAndKey {
     private static int[][] rotateMatrixBy90Degree(int[][] key) {
         int n = key.length;
@@ -29,7 +27,7 @@ public class LockAndKey {
         return true;
     }
 
-    public static boolean Solution(int[][] key, int[][] lock) {
+    public static boolean solution(int[][] key, int[][] lock) {
         int n = lock.length;
         int m = key.length;
 
@@ -59,5 +57,11 @@ public class LockAndKey {
         }
 
         return false;
+    }
+
+    public static void main(String[] args) {
+        int[][] key = new int[][]{{0, 0, 0}, {1, 0, 0}, {0, 1, 1}};
+        int[][] lock = new int[][]{{1, 1, 1}, {1, 1, 0}, {1, 0, 1}};
+        System.out.println(solution(key, lock));
     }
 }

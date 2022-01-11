@@ -56,7 +56,7 @@ class Position {
 
 public class ChickenDelivery {
     public static int n, m;
-    public static int[][] arr = new int[50][50];
+    public static int[][] map = new int[50][50];
     public static ArrayList<Position> chicken = new ArrayList<>();
     public static ArrayList<Position> house = new ArrayList<>();
 
@@ -88,9 +88,9 @@ public class ChickenDelivery {
 
         for (int r = 0; r < n; r++) {
             for (int c = 0; c < n; c++) {
-                arr[r][c] = sc.nextInt();
-                if (arr[r][c] == 1) house.add(new Position(r, c)); // 일반 집
-                else if (arr[r][c] == 2) chicken.add(new Position(r, c)); // 치킨집
+                map[r][c] = sc.nextInt();
+                if (map[r][c] == 1) house.add(new Position(r, c)); // 일반 집
+                else if (map[r][c] == 2) chicken.add(new Position(r, c)); // 치킨집
             }
         }
 

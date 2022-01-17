@@ -1,6 +1,5 @@
 package thisIsCodingTest.part3.dfsAndBfs.researchInstitute;
 
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class ResearchInstitute {

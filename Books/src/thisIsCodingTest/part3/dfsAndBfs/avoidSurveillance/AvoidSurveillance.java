@@ -122,13 +122,13 @@ public class AvoidSurveillance {
 
         Combination comb = new Combination(spaces.size(), 3);
         comb.combination(spaces, 0, 0, 0);
-        ArrayList<ArrayList<Position>> spaceList = comb.getResult();
+        ArrayList<ArrayList<Position>> obstacleList = comb.getResult();
 
         boolean found = false;
-        for (ArrayList<Position> spaces : spaceList) {
-            for (Position space : spaces) {
-                int x = space.getX();
-                int y = space.getY();
+        for (ArrayList<Position> obstacles : obstacleList) {
+            for (Position obstacle : obstacles) {
+                int x = obstacle.getX();
+                int y = obstacle.getY();
                 board[x][y] = 'O';
             }
 
@@ -137,9 +137,9 @@ public class AvoidSurveillance {
                 break;
             }
 
-            for (Position space : spaces) {
-                int x = space.getX();
-                int y = space.getY();
+            for (Position obstacle : obstacles) {
+                int x = obstacle.getX();
+                int y = obstacle.getY();
                 board[x][y] = 'X';
             }
         }

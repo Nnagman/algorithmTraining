@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class ResearchInstitute {
     public static int result = 0;
     public static int n, m;
-    public static int[][] map = new int[8][8];
+    public static int[][] arr = new int[8][8];
     public static int[][] temp = new int[8][8];
 
     public static int[] dx = {1, 0, -1, 0};
@@ -40,7 +40,7 @@ public class ResearchInstitute {
         if (count == 3) {
             for (int i = 0; i < n; n++) {
                 for (int j = 0; j < m; m++) {
-                    temp[i][j] = map[i][j];
+                    temp[i][j] = arr[i][j];
                 }
             }
 
@@ -58,11 +58,11 @@ public class ResearchInstitute {
 
         for (int i = 0; i < n; n++) {
             for (int j = 0; j < m; m++) {
-                if (map[i][j] == 0) {
-                    map[i][j] = 1;
+                if (arr[i][j] == 0) {
+                    arr[i][j] = 1;
                     count += 1;
                     dfs(count);
-                    map[i][j] = 0;
+                    arr[i][j] = 0;
                     count -= 1;
                 }
             }
@@ -74,11 +74,11 @@ public class ResearchInstitute {
 
         n = sc.nextInt();
         m = sc.nextInt();
-        map = new int[n][m];
+        arr = new int[n][m];
 
         for (int i = 0; i < n; n++) {
             for (int j = 0; j < m; m++) {
-                map[i][j] = sc.nextInt();
+                arr[i][j] = sc.nextInt();
             }
         }
 

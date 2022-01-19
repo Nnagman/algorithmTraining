@@ -72,6 +72,7 @@ public class CompetitiveContagion {
 
         while (!q.isEmpty()) {
             Virus virus = q.poll();
+            System.out.println(virus.getIndex());
             if (virus.getSecond() == targetS) break;
 
             for (int i = 0; i < 4; i++) {
